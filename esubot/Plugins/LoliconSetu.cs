@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using esubot.Core;
 using esubot.Tools;
 using Newtonsoft.Json;
 
@@ -15,7 +16,7 @@ namespace esubot.Plugins
         string _title = "";
         string _author = "";
         string _originalUrl = "";
-        string _largeUrl = "";
+        string _regularUrl = "";
         bool _r18 = false;
         int _width = 0;
         int _height = 0;
@@ -36,6 +37,7 @@ namespace esubot.Plugins
             string setuJson = HttpTool.Get($"https://api.lolicon.app/setu/v2/?size=regular&r18=0", "");
             ParseSetu(setuJson); // 分析色图。
             DownloadSetu(); // 下载色图。
+            Log.LogOut("", $"色图功能:色图功能调用-无r18:{_regularUrl}");
             return _setuFile;
             
         }
@@ -49,6 +51,7 @@ namespace esubot.Plugins
             string setuJson = HttpTool.Get($"https://api.lolicon.app/setu/v2/?size=regular&r18=1", "");
             ParseSetu(setuJson); // 分析色图。
             DownloadSetu(); // 下载色图。
+            Log.LogOut("", $"色图功能:色图功能调用-有r18:{_regularUrl}");
             return _setuFile;
         }
 
@@ -59,11 +62,8 @@ namespace esubot.Plugins
         private int ParseSetu(string setuJson)
         {
             LoliconJson result = JsonConvert.DeserializeObject<LoliconJson>(setuJson);
-            if (result.code == 0)
-            {
-                _originalUrl = result.data[0].url;
-                _pid = result.data[0].pid;
-            }
+            _regularUrl = result.data[0].urls.regular;
+            _pid = result.data[0].pid;
             return 0;
         }
 
@@ -86,27 +86,23 @@ namespace esubot.Plugins
                 _setuFile = Path.Combine(_setuData, _pid + ".jpg"); // 感觉这样不太好？
             }
 
-            byte[] pic = HttpTool.GetBytesFromUrl(this._originalUrl);
+            byte[] pic = HttpTool.GetBytesFromUrl(this._regularUrl);
             HttpTool.WriteBytesToFile(this._setuFile, this._setuData, pic);
             return 0;
         }
     }
 
     /// <summary>
-    /// 对Lolicon的json的解析反序列化使用的实体类。
+    /// 对Lolicon的json的解析反序列化使用的实体类。V2接口。
     /// </summary>
     public class LoliconJson
     {
-        public int code { get; set; }
-        public string msg { get; set; }
-        public int quota { get; set; }
-        public int quotaMinTtl { get; set; }
-        public int count { get; set; }
+        public string error { get; set; }
         public List<SetuImageJson> data { get; set; }
     }
 
     /// <summary>
-    /// 对Lolicon的json的图片信息反序列化使用的实体类。
+    /// 对Lolicon的json的图片信息反序列化使用的实体类。V2接口。
     /// </summary>
     public class SetuImageJson
     {
@@ -115,10 +111,21 @@ namespace esubot.Plugins
         public int uid { get; set; }
         public string title { get; set; }
         public string author { get; set; }
-        public string url { get; set; }
+        public Urls urls { get; set; }
         public bool r18 { get; set; }
         public int width { get; set; }
         public int height { get; set; }
         public List<string> tags { get; set; }
+        public string ext { get; set; }
+        public long uploadDate { get; set; }
+    }
+
+    /// <summary>
+    /// 对Lolicon的色图的获取反序列化的实体类。V2接口。
+    /// </summary>
+    public class Urls
+    {
+        public string regular { get; set; }
+        //public string original { get; set; }
     }
 }
