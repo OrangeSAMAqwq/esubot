@@ -92,7 +92,7 @@ namespace esubot.Message
         public async Task<bool> GroupMemberPositiveLeave(MiraiHttpSession session, IGroupMemberPositiveLeaveEventArgs e) // 群聊有人主动离开，需要设计多种提示语
         {
             Random ran = new Random(); // 引入随机数，使用系统时间作为随机数种子
-            int n = ran.Next(1, 5); // 随机数字限定在1-5
+            int n = ran.Next(1, 6); // 随机数字限定在1-5
             IMessageBase plainAttention = new PlainMessage($"哦我的天！{e.Member.Name}，@{e.Member.Id}，溜走了！");
             switch (n)
             {

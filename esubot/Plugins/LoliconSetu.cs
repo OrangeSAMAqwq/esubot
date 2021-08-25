@@ -29,7 +29,7 @@ namespace esubot.Plugins
         }
 
         /// <summary>
-        /// 获取无Tag无r18的色图。
+        /// 获取无tag无r18的色图。
         /// </summary>
         /// <returns>色图存放地址</returns>
         public string GetSetu()

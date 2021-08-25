@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using esubot.Core;
 using esubot.Tools;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
@@ -31,8 +32,8 @@ namespace esubot.Plugins
 
             int maxNumber = FileTool.GetFileNum(_dPicData);
             Random ran = new Random(); // 引入随机数，使用系统时间作为随机数种子
-            int n = ran.Next(1, maxNumber); // 随机数字限定在获取到的龙图最大值
-
+            int n = ran.Next(1, maxNumber + 1); // 随机数字限定在获取到的龙图最大值
+            Log.LogOut("", "龙图:龙图文件数:" + maxNumber + ",随机数截取到:" + n);
             _dPicFile = Path.Combine(_dPicData, n + ".jpg");
             return _dPicFile;
         }

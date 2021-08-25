@@ -32,12 +32,16 @@ namespace esubot
             string authkey = sb.authkey; // http authkey。
             long qq = long.Parse(sb.account); // 账号。
 
+            Log.LogOut("", "入口点:向数据文件夹读取数据完成，当前运行QQ账号:" + qq);
+
             /*
              * Mirai初始化。
              */
 
             MiraiHttpSessionOptions options = new MiraiHttpSessionOptions(ip, port, authkey); //MiraiQQ Http。
             await using MiraiHttpSession session = new MiraiHttpSession();
+
+            Log.LogOut("", "入口点:MiraiHttpSession启动");
 
             /*
              * 插件装载：实例化插件对象。
@@ -48,9 +52,14 @@ namespace esubot
             session.AddPlugin(groupEventNotice);
             session.AddPlugin(msgGroupManager);
 
+            Log.LogOut("", "入口点:初始化Message处理完成");
+
             /*
              * QQ
              */
+
+            Log.LogOut("", "入口点:机器人开始运行");
+
             await session.ConnectAsync(options, qq); // QQ号
             while (true)
             {
