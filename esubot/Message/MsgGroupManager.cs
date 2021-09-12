@@ -40,7 +40,7 @@ namespace esubot.Message
             Log.LogOut("", msg);
 
             //色图插件
-            if (str.Contains("色图"))
+            if (str.Equals("色图来"))
             {
                 reply = "正在获取色图！";
                 plain = new PlainMessage(reply);
@@ -55,8 +55,24 @@ namespace esubot.Message
                 await SendPictureAsync(session, path, e.Sender.Group.Id);
 
             }
+            
+            if (str.Equals("超级无敌色图"))
+            {
+                reply = "正在获取色图！";
+                plain = new PlainMessage(reply);
+                await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
 
-            if(str.Contains("龙图"))
+                LoliconSetu loliconSetu = new LoliconSetu();
+                var path = loliconSetu.GetSetuR18();
+
+                reply = "已获取到色图！正在发送～";
+                plain = new PlainMessage(reply);
+                await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
+                await SendPictureAsync(session, path, e.Sender.Group.Id);
+
+            }
+
+            if (str.Equals("龙图来"))
             {
                 RandomLadyDragon randomLadyDragon = new RandomLadyDragon();
                 var path = randomLadyDragon.GetRandomLadyDragonPic();
